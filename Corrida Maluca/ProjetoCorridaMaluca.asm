@@ -1,37 +1,81 @@
 #ProjetoCorridaMaluca
 .data
-perguntaini: .asciiz "Insira a quantidade de jogadores: "
-perguntanome: .asciiz "Insira o nome dos jogadores: "
-msgjogo: .asciiz "\nAperte enter para rodar dados!!! "
+perguntaini: .asciiz "\nInsira a quantidade de jogadores: "
+perguntanome: .asciiz "\nInsira o nome dos jogadores: "
+msgjogo: .asciiz "\n\nAperte enter para rodar dados!!! "
 jogador: .space 40
-msgdados: .asciiz "Resultado dos dados: "
-j1: .asciiz "\nVez do jogador 1: "
-j2: .asciiz "\nVez do jogador 2: "
-j3: .asciiz "\nVez do jogador 3: "
-j4: .asciiz "\nVez do jogador 4: "
-casa6: .asciiz "\nEntrou em casa com sapatos que usou na rua, volte 1 casa!"
-casa10: .asciiz "\nVocê comprou mais do que precisava, volte 3 casas!"
-casa13: .asciiz "\nUsou lenço descartável ao espirrar, avance 2 casas!"
-casa16: .asciiz "\nVocê ajudou a familia, avance 3 casas!"
-casa17: .asciiz "\nVovô saiu de casa, volte 5 casas!"
-casa20: .asciiz "\nVocê está com febre e saiu para passear, volte ao inicio do jogo!"
-casa25: .asciiz "\nTossiu sem cobrir a boca, volte 3 casas!"
-casa33: .asciiz "\nUsou álcool gel nas mãos, avance 2 casas!"
-casa36: .asciiz "\nMantem os ambientes ventilados, avance 4 casas!"
-casa38: .asciiz "\nAntes de jogar você lavou as mãos, avance 2 casas!"
-casa41: .asciiz "\nApos jogar voce lavou as mãos, avance 4 casas!"
-casa46: .asciiz "\nVoce cumprimentou com as maos, volte 4 casas!"
-casa49: .asciiz "\nVoce foi a uma festa, volte 5 casas!"
-mensagemfinal: .asciiz "\nJogo encerrado! "
-
+msgdados: .asciiz "\n\nResultado dos dados: "
+j1: .asciiz "\n\nVez do jogador 1: "
+j2: .asciiz "\n\nVez do jogador 2: "
+j3: .asciiz "\n\nVez do jogador 3: "
+j4: .asciiz "\n\nVez do jogador 4: "
+casa6: .asciiz "\n\nEntrou em casa com sapatos que usou na rua, volte 1 casa!"
+casa10: .asciiz "\n\nVocê comprou mais do que precisava, volte 3 casas!"
+casa13: .asciiz "\n\nUsou lenço descartável ao espirrar, avance 2 casas!"
+casa16: .asciiz "\n\nVocê ajudou a familia, avance 3 casas!"
+casa17: .asciiz "\n\nVovô saiu de casa, volte 5 casas!"
+casa20: .asciiz "\n\nVocê está com febre e saiu para passear, volte ao inicio do jogo!"
+casa25: .asciiz "\n\nTossiu sem cobrir a boca, volte 3 casas!"
+casa33: .asciiz "\n\nUsou álcool gel nas mãos, avance 2 casas!"
+casa36: .asciiz "\n\nMantem os ambientes ventilados, avance 4 casas!"
+casa38: .asciiz "\n\nAntes de jogar você lavou as mãos, avance 2 casas!"
+casa41: .asciiz "\n\nApos jogar voce lavou as mãos, avance 4 casas!"
+casa46: .asciiz "\n\nVoce cumprimentou com as maos, volte 4 casas!"
+casa49: .asciiz "\n\nVoce foi a uma festa, volte 5 casas!"
+mensagemfinal: .asciiz "\n\nJogo encerrado! "
+comecoganhou: .asciiz "\n\nAcabou! É férias! "
+ganhou1: .asciiz "\nJogador 1 ganhou!!!"
+ganhou2: .asciiz "\nJogador 2 ganhou!!!"
+ganhou3: .asciiz "\nJogador 3 ganhou!!!"
+ganhou4: .asciiz "\nJogador 4 ganhou!!!"
+qtderrada: .asciiz "\n\nQuantidade de jogadores invalida! Tente novamente!"
 .text
 main: 
  jal iniciojogo
  jal loopjogo
-
+#---dizer quem ganhou
+fimmain:
+# verificação jogador 1
+bne $t0, 1, naofoi1
+li $v0, 4
+la $a0, comecoganhou
+syscall
+li $v0, 4
+la $a0, ganhou1
+syscall
+naofoi1:
+# verificação jogador 2
+bne $t0, 2, naofoi2
+li $v0, 4
+la $a0, comecoganhou
+syscall
+li $v0, 4
+la $a0, ganhou2
+syscall
+naofoi2:
+# verificação jogador 3
+bne $t0, 3, naofoi3
+li $v0, 4
+la $a0, comecoganhou
+syscall
+li $v0, 4
+la $a0, ganhou3
+syscall
+naofoi3:
+# verificação jogador 4
+bne $t0, 4, naofoi4
+li $v0, 4
+la $a0, comecoganhou
+syscall
+li $v0, 4
+la $a0, ganhou4
+syscall
+naofoi4:
+#------------------
 #fim do programa
 addi $v0, $zero, 10
 syscall
+
 
 
 
@@ -41,8 +85,8 @@ syscall
 
 
 
-
 iniciojogo:
+tentardnv:
 #Pergunta quantos jogadores
 li $v0, 4
 la $a0, perguntaini
@@ -50,6 +94,14 @@ syscall
 #adiciona numero de jogadores em registrador v0
 li $v0, 5
 syscall
+ #verifica se a quantidade é menor que 5, se for o jogo continuar
+ blt $v0, 5, passou
+ 
+ li $v0, 4
+ la $a0, qtderrada
+ syscall
+ j tentardnv
+passou: 
 #salva numero de jogadores em $s0
 add $s0, $s0, $v0
 #Começo do loop de acordo com o numero de jogadores
@@ -140,6 +192,7 @@ add $t1, $t1, $k0
 add $s7, $zero, $t1
 jal VerificaCasa
 add $t1, $zero, $s7
+bge $t1, 50, Fimloopjogo #verifica se o jogador 1 ganhou
 vez2:
 #se for vez do jogador 2, add na pontuação de t2
 bne $t0, 2, vez3
@@ -147,6 +200,7 @@ add $t2, $t2, $k0
 add $s7, $zero, $t2
 jal VerificaCasa
 add $t2, $zero, $s7
+bge $t2, 50, Fimloopjogo #verifica se o jogador 2 ganhou
 vez3:
 #se for vez do jogador 3, add na pontuação de t3
 bne $t0, 3, vez4
@@ -154,6 +208,7 @@ add $t3, $t3, $k0
 add $s7, $zero, $t3
 jal VerificaCasa
 add $t3, $zero, $s7
+bge $t3, 50, Fimloopjogo #verifica se o jogador 3 ganhou
 vez4:
 #se for vez do jogador 4, add na pontuação de t4
 bne $t0, 4, acabavez
@@ -161,19 +216,18 @@ add $t4, $t4, $k0
 add $s7, $zero, $t4
 jal VerificaCasa
 add $t4, $zero, $s7
+bge $t4, 50, Fimloopjogo #verifica se o jogador 4 ganhou
 acabavez:
 #contador para loop da ordem do jogador
 bne $s0, $t0, contador
 addi $t0, $zero,0 
 contador:
-#verifica se ganhou
-bge $t1, 50, Fimloopjogo
 j Loopjogo
 Fimloopjogo:
 li $v0, 4
 la $a0, mensagemfinal
 syscall
-jr $ra
+j fimmain
 
 
 #-------------
