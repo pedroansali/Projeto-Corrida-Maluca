@@ -29,6 +29,10 @@ ganhou2: .asciiz "\nJogador 2 ganhou!!!"
 ganhou3: .asciiz "\nJogador 3 ganhou!!!"
 ganhou4: .asciiz "\nJogador 4 ganhou!!!"
 qtderrada: .asciiz "\n\nQuantidade de jogadores invalida! Tente novamente!"
+parcial1: .asciiz "\nPontuação do jogador 1: "
+parcial2: .asciiz "\nPontuação do jogador 2: "
+parcial3: .asciiz "\nPontuação do jogador 3: "
+parcial4: .asciiz "\nPontuação do jogador 4: "
 .text
 main: 
  jal iniciojogo
@@ -193,6 +197,14 @@ add $s7, $zero, $t1
 jal VerificaCasa
 add $t1, $zero, $s7
 bge $t1, 50, Fimloopjogo #verifica se o jogador 1 ganhou
+#exibe resultado parcial do jogador 1
+li $v0, 4
+la $a0, parcial1
+syscall
+li $v0, 1
+add $a0, $zero, $t1
+syscall
+# ------------
 vez2:
 #se for vez do jogador 2, add na pontuação de t2
 bne $t0, 2, vez3
@@ -201,6 +213,14 @@ add $s7, $zero, $t2
 jal VerificaCasa
 add $t2, $zero, $s7
 bge $t2, 50, Fimloopjogo #verifica se o jogador 2 ganhou
+#exibe resultado parcial do jogador 2
+li $v0, 4
+la $a0, parcial2
+syscall
+li $v0, 1
+add $a0, $zero, $t2
+syscall
+# ------------
 vez3:
 #se for vez do jogador 3, add na pontuação de t3
 bne $t0, 3, vez4
@@ -209,6 +229,14 @@ add $s7, $zero, $t3
 jal VerificaCasa
 add $t3, $zero, $s7
 bge $t3, 50, Fimloopjogo #verifica se o jogador 3 ganhou
+#exibe resultado parcial do jogador 3
+li $v0, 4
+la $a0, parcial3
+syscall
+li $v0, 1
+add $a0, $zero, $t3
+syscall
+# ------------
 vez4:
 #se for vez do jogador 4, add na pontuação de t4
 bne $t0, 4, acabavez
@@ -217,6 +245,14 @@ add $s7, $zero, $t4
 jal VerificaCasa
 add $t4, $zero, $s7
 bge $t4, 50, Fimloopjogo #verifica se o jogador 4 ganhou
+#exibir resultado parcial do jogador
+li $v0, 4
+la $a0, parcial4
+syscall
+li $v0, 1
+add $a0, $zero, $t4
+syscall
+# ------------
 acabavez:
 #contador para loop da ordem do jogador
 bne $s0, $t0, contador
